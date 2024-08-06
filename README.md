@@ -89,6 +89,7 @@ ORDER BY profit_percentage desc
 |OFfice Supplies| 17 | 
 |Technology| 17 | 
 |Furniture| 2 | 
+
 ### 4. How much profit does each sub-category provide?
 ```sql
 SELECT sub_category,
@@ -116,7 +117,7 @@ ORDER BY total_profit desc
 |South| 46749 | 
 |Central|39706 |
 
-## 6. Which city has the highest number of sales?
+### 6. Which city has the highest number of sales?
 ```sql
 SELECT city,
 ROUND(SUM(sales)) AS sales
@@ -138,6 +139,6 @@ LIMIT 10
 |Jacksonville|44714|
 |Springfield|43055|
 
-## 7. Which city has the lowest number of sales?
-## 8. Which segment has the most sales?
-## 9. Most popular shipping method?
+### 7. Which city has the lowest number of sales?
+### 8. Which segment has the most sales?
+### 9. Most popular shipping method?
