@@ -64,7 +64,9 @@ FROM superstore;
 ```
 |unique_sales|
 |---|
-|9993|
+|9994|
+
+* There are 9,994 unique sales that the Superstore has had. 
 
 ### 2. How many unique customers has the superstore had?
 ```sql
@@ -76,31 +78,62 @@ FROM superstore
 |---|
 |793|
 
+* There have been 793 unique customers at the Superstore. 
+
 ### 3. How much profit does each category provide?
 ```sql
 SELECT category,
-	ROUND((SUM(profit) / NULLIF(SUM(sales) - SUM(discount), 0)) * 100) AS profit_percentage
+    ROUND(SUM(profit)) AS total_profit,
+    (SUM(profit) / (SELECT SUM(profit) FROM superstore)) * 100 AS profit_percentage
 FROM superstore
 GROUP BY category
-ORDER BY profit_percentage desc
+ORDER BY profit_percentage DESC;
 ```
-|category|profit_percentage|
-|---|---|
-|OFfice Supplies| 17 | 
-|Technology| 17 | 
-|Furniture| 2 | 
+|category|total_profit|profit_percentage|
+|---|---|---|
+|Technology|145455|50.78787036143233
+|Office Supplies|122491|42.76957912233748
+|Furniture|18451|6.442550516229726
+
+![image](https://github.com/user-attachments/assets/c998ee22-185c-4ee0-993e-d812a17a8740)
+
+* Technology has the highest amount of profit percentage, just over 50%. 
+* Furniture has the lowest. 
+
 
 ### 4. How much profit does each sub-category provide?
 ```sql
-SELECT sub_category,
-	ROUND((SUM(profit) / NULLIF(SUM(sales) - SUM(discount), 0)) * 100) AS profit_percentage
+SELECT sub_category, ROUND(SUM(sales)) AS total_sales, 
+    ROUND(SUM(profit)) AS total_profit,
+    (SUM(profit) / (SELECT SUM(profit) FROM superstore)) * 100 AS profit_percentage
 FROM superstore
 GROUP BY sub_category
-ORDER BY profit_percentage desc
+ORDER BY total_profit desc;
 ```
-|sub_category|profit_percentage|
-|---|---|
-|Labels| 45 | 
+|sub_category|total_sales|total_profit|profit_percentage|
+|---|---|---|---|
+Copiers|149529|55618|19.419833547801087
+Phones|330020|44516|15.543363662011084
+Accessories|167389|41937|14.642832335012281
+Paper|78485|34054|11.890336393117531
+Binders|203417|30222|10.552401390422649
+Chairs|328453|26590|9.284372491782761
+Storage|223847|21279|7.429835084768935
+Appliances|107533|18138|6.333168303335017
+Furnishings|91710|13059|4.559804261400224
+Envelopes|16478|6964|2.431651229702704
+Art|27121|6528|2.2792789398619533
+Labels|12488|5546|1.936561339597189
+Machines|189240|3385|1.1818408166078997
+Fasteners|3025|950|0.33153913206353547
+Supplies|46674|-1189|-0.4151926905320863
+Bookcases|114882|-3473|-1.212497245742127
+Tables|206967|-17725|-6.1891289912111285
+
+![image](https://github.com/user-attachments/assets/9a8088df-2a8b-4cd4-8faf-beee8f6a8716)
+
+* Copiers bring in the most amount of profit followed by phones. 
+* Supplies, bookcases, and tables bring in a negative amount of profit for the business. 
 
 ### 5. Which region is the most profitable?
 ```sql
@@ -117,6 +150,13 @@ ORDER BY total_profit desc
 |South| 46749 | 
 |Central|39706 |
 
+![image](https://github.com/user-attachments/assets/776c8977-2a52-41bc-b9ac-c97ef3c723d7)
+
+* The Western region has the highest amount of profit, followed by the Eastern region.
+* The Central region bring in the least amount of profit.
+
+The buisness should focus on the Western and Eastern regions. 
+
 ### 6. Which city has the highest number of sales?
 ```sql
 SELECT city,
@@ -128,17 +168,96 @@ LIMIT 10
 ```
 |city|sales|
 |---|---|
-|New York City|256373|
-|Los Angeles|175855|
-|Seattle|119543|
-|San Francisco|112674|
-|Philadelphia|109079|
-|Houston|64506|
-|Chicago|48541|
-|San Diego|47522|
-|Jacksonville|44714|
-|Springfield|43055|
+New York City|256373
+Los Angeles|175855
+Seattle|119543
+San Francisco|112674
+Philadelphia|109079
+Houston|64506
+Chicago|48541
+San Diego|47522
+Jacksonville|44714
+Springfield|43055
+
+![image](https://github.com/user-attachments/assets/70fa0e2a-6e4a-4a45-a0e4-21e539e4b302)
+
+* New York has the highest number of sales. 
 
 ### 7. Which city has the lowest number of sales?
+```sql
+SELECT city,
+ROUND(SUM(sales)) AS sales
+FROM superstore
+GROUP BY city
+ORDER BY sales asc
+LIMIT 10
+```
+|city|sales|
+|---|---|
+Abilene|1
+Jupiter|2
+Elyria|2
+Pensacola|2
+Ormond Beach|3
+Springdale|4
+San Luis Obispo|4
+Layton|5
+Missouri City|6
+Keller|6
+
+![image](https://github.com/user-attachments/assets/232d8b1e-4cd8-4a66-829a-6af89e806d36)
+
+* Abilene has the lowest number of sales.
+
+  These two graphs show a large gap between New York and Abilene. The business should target the highest selling cities.  
+
 ### 8. Which segment has the most sales?
+```sql
+SELECT segment,
+ROUND(SUM(sales)) AS sales
+FROM superstore
+GROUP BY segment
+ORDER BY sales desc
+```
+|segment|sales|
+|---|---|
+Consumer|1161429
+Corporate|706166
+Home Office|429663
+
+![image](https://github.com/user-attachments/assets/4cf7ddea-df28-498d-9429-30b606431f2e)
+
+* The consumer segment has the highest amount of sales. 
+
 ### 9. Most popular shipping method?
+```sql
+SELECT ship_mode, COUNT(order_id) as orders
+FROM superstore
+GROUP BY ship_mode
+ORDER BY orders desc
+```
+|ship_mode|orders|
+|---|---|
+Standard Class|5968
+Second Class|1945
+First Class|1538
+Same Day|543
+
+![image](https://github.com/user-attachments/assets/0bbec95e-df36-4fef-a9cb-54ac059eb702)
+
+* The most popular shipping method is Standard class.
+
+## Strategic Recommendation
+
+Revisiting the business questions from before: 
+* How many unique sales and customers has the superstore had?
+* What percent of profit does each category and sub-category provide?
+* Which region is the most profitable?
+* Which city has the highest number of sales?
+* Which segment has the most sales?
+* Most popular shipping method?
+
+### Recommendations  
+* Focus on the technology category since it brings in the most profit and sales. Copiers, phones, and accessories are the major profit producers in this category. 
+* Dropping or merging with high profiting items - tables and bookcases from the furniture category and supplies from office supplies - will remove the lowest earning profit items. 
+* Consumer and Corporate segments make up the majority of sales. The business should focus on the eastern and western regions since they have the cities with the most amount of sales. More advertisements, or bundling products, could help increase sales in these areas. 
