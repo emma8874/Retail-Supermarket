@@ -55,6 +55,11 @@ row_id|order_id|order_date|ship_date|ship_mode|customer_id|customer_name|segment
 There is a wide variety of data with differences of state, category, product, and other numerical values.
 Each row represents an order which contains an item (and quanitity), the sales, discount, profit, mode of shipment, customer segment, and geographical infomation.
 
+## Map of Orders
+Each circle is city of an order divided by the region. 
+![image](https://github.com/user-attachments/assets/afd495ec-e8df-4cb9-975a-9d1f9ee23614)
+
+
 ## Exploratory Data Analysis
 ### 1. How many unique sales has the superstore had?
 ```sql
